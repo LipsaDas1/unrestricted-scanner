@@ -3,182 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AegisScanner - Cyber Law & SecOps Portal</title>
+    <title>AegisScanner Enterprise Portal</title>
+    <!-- Imports the client-side PDF compilation canvas engine -->
+    <script src="https://cloudflare.com"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #0d1117;
+            background-color: #06090f;
             color: #c9d1d9;
-            padding: 40px;
+            margin: 0; padding: 40px;
+            position: relative; overflow-x: hidden;
+        }
+        /* MATRIX DIGITAL RAIN CANVAS BACKGROUND */
+        #matrixCanvas {
+            position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1; opacity: 0.15;
         }
         .container {
-            max-width: 800px;
-            margin: auto;
-            background: #161b22;
-            padding: 30px;
-            border-radius: 8px;
+            max-width: 850px; margin: auto;
+            background: rgba(22, 27, 34, 0.95);
+            padding: 40px; border-radius: 12px;
             border: 1px solid #30363d;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
         }
-        h1 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+        h1 { color: #58a6ff; border-bottom: 2px solid #30363d; padding-bottom: 12px; margin-top: 0; }
         .input-box {
-            width: 70%; padding: 12px;
+            width: 68%; padding: 14px;
             background: #0d1117; border: 1px solid #30363d;
-            color: white; border-radius: 4px;
+            color: white; border-radius: 6px; font-size: 16px;
         }
         .scan-btn {
             background-color: #238636; color: white;
-            padding: 12px 24px; border: none;
-            border-radius: 4px; cursor: pointer; font-weight: bold;
+            padding: 14px 28px; border: none;
+            border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 16px;
         }
         .scan-btn:hover { background-color: #2ea043; }
         
-        /* HIGH-TECH RADAR SPINNER */
-        .loader-container {
-            display: none;
-            margin-top: 25px;
-            text-align: center;
-        }
+        .loader-container { display: none; margin-top: 30px; text-align: center; }
         .cyber-spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #30363d;
-            border-top: 5px solid #58a6ff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: auto;
-            box-shadow: 0 0 15px #58a6ff;
+            width: 60px; height: 60px;
+            border: 5px solid #30363d; border-top: 5px solid #58a6ff;
+            border-radius: 50%; animation: spin 1s linear infinite; margin: auto;
+            box-shadow: 0 0 20px #58a6ff;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .loader-text {
-            color: #58a6ff;
-            margin-top: 10px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loader-text { color: #58a6ff; margin-top: 15px; font-weight: bold; letter-spacing: 2px; }
 
         .result-card {
-            margin-top: 25px; padding: 20px;
-            background: #21262d; 
-            border-left: 5px solid #8b949e;
-            border-radius: 4px;
-            display: none;
+            margin-top: 30px; padding: 25px;
+            background: #21262d; border-left: 6px solid #8b949e;
+            border-radius: 6px; display: none;
         }
         .report-btn {
-            margin-top: 15px;
-            background-color: #21262d; color: #58a6ff;
-            border: 1px solid #30363d; padding: 10px 20px;
-            border-radius: 4px; cursor: pointer; font-weight: bold;
+            margin-top: 20px; background-color: #58a6ff; color: #0d1117;
+            border: none; padding: 12px 24px; border-radius: 6px;
+            cursor: pointer; font-weight: bold; font-size: 15px;
         }
-        .report-btn:hover { background-color: #30363d; color: #79c0ff; }
+        .report-btn:hover { background-color: #79c0ff; }
+
+        /* HIDDEN PDF TEMPLATE STYLING BLOCK */
+        #pdfTemplate {
+            display: none; background: white; color: #333;
+            padding: 50px; font-family: Arial, sans-serif;
+        }
+        .pdf-header { border-bottom: 3px solid #0056b3; padding-bottom: 15px; margin-bottom: 30px; text-align: center; }
+        .pdf-section { margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; }
+        .pdf-title { font-weight: bold; color: #0056b3; margin-bottom: 5px; text-transform: uppercase; font-size: 14px;}
     </style>
 </head>
 <body>
 
+<canvas id="matrixCanvas"></canvas>
+
 <div class="container">
-    <h1>AegisScanner Engine</h1>
-    <p>Enter enterprise web application URL to conduct an automated DAST audit and legal framework cross-mapping.</p>
+    <h1>AegisScanner Enterprise Portal</h1>
+    <p>Conduct multi-vector DAST evaluations cross-mapped with global data privacy compliance structures.</p>
     
-    <input type="text" id="urlInput" class="input-box" placeholder="http://example.com">
+    <input type="text" id="urlInput" class="input-box" placeholder="Enter domain to audit (e.g. google.com)">
     <button class="scan-btn" onclick="executeAudit()">Execute Audit</button>
 
     <div id="loaderContainer" class="loader-container">
         <div class="cyber-spinner"></div>
-        <div class="loader-text">⚔️ AUDITING TARGET SECURITY LAYERS...</div>
+        <div class="loader-text">⚔️ CYBER INTEL SYSTEM ACTIVE...</div>
     </div>
 
     <div id="resultCard" class="result-card">
         <h3>Vulnerability Status: <span id="statusText">--</span></h3>
-        <p><strong>Technical Exploit Vector:</strong> <span id="flawText">--</span></p>
+        <p><strong>Vector Summary:</strong> <span id="flawText">--</span></p>
         <p><strong>Statutory Liability Framework:</strong> <span id="legalText">--</span></p>
-        <button class="report-btn" onclick="downloadReport()">📥 Download Audit Report</button>
+        <button class="report-btn" onclick="generateCorporatePDF()">🔒 Download Compliance PDF</button>
     </div>
 </div>
 
+<!-- COMPILER CAPTURE MATRIX BLOCK (CONVERTS INTO PDF DYNAMICALLY) -->
+<div id="pdfTemplate">
+    <div class="pdf-header">
+        <h1 style="color: #0056b3; margin: 0; font-size: 28px;">AEGISSCANNER SECURITY COMPLIANCE REPORT</h1>
+        <p style="color: #666; margin: 5px 0 0 0;">Enterprise Digital Asset Risk & Statutory Audit Profile</p>
+    </div>
+    <p><strong>Target Evaluation Link:</strong> <span id="pdfTarget" style="color:#0056b3; font-weight:bold;"></span></p>
+    
+    <div class="pdf-section">
+        <div class="pdf-title">Security Standing Profile</div>
+        <div id="pdfStatus" style="font-size: 18px; font-weight: bold; margin-top: 5px;"></div>
+    </div>
+    <div class="pdf-section">
+        <div class="pdf-title">Technical Exploit Log Analysis</div>
+        <div id="pdfFlaw"></div>
+    </div>
+    <div class="pdf-section">
+        <div class="pdf-title">Indian IT Act Framework Mapping</div>
+        <div id="pdfLegal"></div>
+    </div>
+    <div class="pdf-section">
+        <div class="pdf-title">EU GDPR Compliance Review (Art. 32)</div>
+        <div id="pdfGDPR"></div>
+    </div>
+    <div class="pdf-section">
+        <div class="pdf-title">India DPDP Act 2023 Statutory Check</div>
+        <div id="pdfDPDP"></div>
+    </div>
+    
+    <p style="text-align: center; color: #aaa; font-size: 12px; margin-top: 50px; border-top: 1px solid #eee; padding-top: 15px;">
+        CONFIDENTIAL SECURITY DOCUMENT • ISSUED AUTOMATICALLY VIA AEGISSCANNER NETWORK CLUSTER
+    </p>
+</div>
+
 <script>
-    let globalTarget = "", globalStatus = "", globalFlaw = "", globalLegal = "";
+    // MATRIX RAIN ANIMATION ENGINE CODE LOGIC
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const alphabet = "01010101ABCDEFGHIJKLMNOPQRSTUVWXYZ⚔️🛡️☠️";
+    const fontSize = 16; const columns = canvas.width / fontSize;
+    const rainDrops = Array(Math.floor(columns)).fill(1);
+
+    function drawMatrix() {
+        ctx.fillStyle = 'rgba(6, 9, 15, 0.05)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#0f0'; ctx.font = fontSize + 'px monospace';
+        for (let i = 0; i < rainDrops.length; i++) {
+            const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+            ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+            if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) rainDrops[i] = 0;
+            rainDrops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 30);
+    window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+    // API EXECUTOR PIPELINE
+    let currentData = {};
+    let targetDomainSnapshot = "";
 
     async function executeAudit() {
         const urlInput = document.getElementById('urlInput').value.trim();
         const resultCard = document.getElementById('resultCard');
         const loaderContainer = document.getElementById('loaderContainer');
-        const statusText = document.getElementById('statusText');
-        const flawText = document.getElementById('flawText');
-        const legalText = document.getElementById('legalText');
 
-        if (!urlInput) {
-            alert("Please enter a URL first!");
-            return;
-        }
+        if (!urlInput) { alert("Enter target URL!"); return; }
 
-        globalTarget = urlInput;
+        targetDomainSnapshot = urlInput;
         resultCard.style.display = "none";
         loaderContainer.style.display = "block";
 
         try {
-            // Relies on direct connection loops back to our Render API backend endpoint
             const response = await fetch('/api/scan', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ url: urlInput })
             });
-
-            const data = await response.json();
+            currentData = await response.json();
 
             loaderContainer.style.display = "none";
             resultCard.style.display = "block";
 
-            globalStatus = data.status;
-            globalFlaw = data.flaw;
-            globalLegal = data.legal_exposure;
+            document.getElementById('statusText').innerText = currentData.status;
+            document.getElementById('flawText').innerText = currentData.flaw;
+            document.getElementById('legalText').innerText = currentData.legal;
 
-            statusText.innerText = data.status;
-            flawText.innerText = data.flaw;
-            legalText.innerText = data.legal_exposure;
-
-            if (data.status.includes("🔴")) {
+            if (currentData.status.includes("🔴")) {
                 resultCard.style.borderLeftColor = "#da3633";
-                statusText.style.color = "#da3633";
-            } else if (data.status.includes("🟢")) {
+                document.getElementById('statusText').style.color = "#da3633";
+            } else if (currentData.status.includes("🟢")) {
                 resultCard.style.borderLeftColor = "#238636";
-                statusText.style.color = "#238636";
+                document.getElementById('statusText').style.color = "#238636";
             } else {
                 resultCard.style.borderLeftColor = "#d29922";
-                statusText.style.color = "#d29922";
+                document.getElementById('statusText').style.color = "#d29922";
             }
-
         } catch (error) {
             loaderContainer.style.display = "none";
-            resultCard.style.display = "block";
-            statusText.innerText = "⚠️ SYSTEM ERROR";
-            statusText.style.color = "#da3633";
-            flawText.innerText = "Could not communicate with the cloud scanner engine instance.";
-            legalText.innerText = "Check active cluster deployment structures.";
+            alert("Connection error occurred.");
         }
     }
 
-    function downloadReport() {
-        if (!globalTarget) return;
-        const logContent = `=========================================
-AEGISSCANNER SECURITY AUDIT LOG FILE
-=========================================
-Target Domain     : ${globalTarget}
-Execution State   : ${globalStatus}
-Exploit Summary   : ${globalFlaw}
-Legal Framework   : ${globalLegal}
-=========================================`;
+    // THE CORPORATE PDF GENERATOR ENGINE HOOK
+    function generateCorporatePDF() {
+        if (!targetDomainSnapshot) return;
 
-        const blob = new Blob([logContent], { type: "text/plain" });
-        const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
-        link.download = `Aegis_Report_${globalTarget.replace(/[^a-zA-Z0-9]/g, "_")}.txt`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-</script>
+        // Populate hidden printable clean white template view area elements
+        document.getElementById('pdfTarget').innerText = targetDomainSnapshot;
+        document.getElementById('pdfStatus').innerText = currentData.status;
+        document.getElementById('pdfStatus').style.color = currentData.status.includes("🔴") ? "#da3633" : "#238636";
+        document.getElementById('pdfFlaw').innerText = currentData.flaw;
+        document.getElementById('pdfLegal').innerText = currentData.legal;
+        document.getElementById('pdfGDPR').innerText = currentData.gdpr;
+        document.getElementById('pdfDPDP').innerText = currentData.dpdp;
 
-</body>
-</html>
+        const element = document.getElementById('pdfTemplate');
+        element.style.display = "block"; // Make visible temporarily for canvas screenshot assembly
+
+        const options = {
+            margin: 0.5,
+            filename: `Aegis_Compliance_Report_${targetDomainSnapshot.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
