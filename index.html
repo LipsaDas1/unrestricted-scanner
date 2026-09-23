@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AegisScanner - Cyber Law & SecOps Portal</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            padding: 40px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #161b22;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        h1 { color: #58a6ff; border-bottom: 1px solid #30363d; padding-bottom: 10px; }
+        .input-box {
+            width: 70%; padding: 12px;
+            background: #0d1117; border: 1px solid #30363d;
+            color: white; border-radius: 4px;
+        }
+        .scan-btn {
+            background-color: #238636; color: white;
+            padding: 12px 24px; border: none;
+            border-radius: 4px; cursor: pointer; font-weight: bold;
+        }
+        .scan-btn:hover { background-color: #2ea043; }
+        
+        /* HIGH-TECH RADAR SPINNER */
+        .loader-container {
+            display: none;
+            margin-top: 25px;
+            text-align: center;
+        }
+        .cyber-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #30363d;
+            border-top: 5px solid #58a6ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: auto;
+            box-shadow: 0 0 15px #58a6ff;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loader-text {
+            color: #58a6ff;
+            margin-top: 10px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .result-card {
+            margin-top: 25px; padding: 20px;
+            background: #21262d; 
+            border-left: 5px solid #8b949e;
+            border-radius: 4px;
+            display: none;
+        }
+        .report-btn {
+            margin-top: 15px;
+            background-color: #21262d; color: #58a6ff;
+            border: 1px solid #30363d; padding: 10px 20px;
+            border-radius: 4px; cursor: pointer; font-weight: bold;
+        }
+        .report-btn:hover { background-color: #30363d; color: #79c0ff; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>AegisScanner Engine</h1>
+    <p>Enter enterprise web application URL to conduct an automated DAST audit and legal framework cross-mapping.</p>
+    
+    <input type="text" id="urlInput" class="input-box" placeholder="http://example.com">
+    <button class="scan-btn" onclick="executeAudit()">Execute Audit</button>
+
+    <div id="loaderContainer" class="loader-container">
+        <div class="cyber-spinner"></div>
+        <div class="loader-text">⚔️ AUDITING TARGET SECURITY LAYERS...</div>
+    </div>
+
+    <div id="resultCard" class="result-card">
+        <h3>Vulnerability Status: <span id="statusText">--</span></h3>
+        <p><strong>Technical Exploit Vector:</strong> <span id="flawText">--</span></p>
+        <p><strong>Statutory Liability Framework:</strong> <span id="legalText">--</span></p>
+        <button class="report-btn" onclick="downloadReport()">📥 Download Audit Report</button>
+    </div>
+</div>
+
+<script>
+    let globalTarget = "", globalStatus = "", globalFlaw = "", globalLegal = "";
+
+    async function executeAudit() {
+        const urlInput = document.getElementById('urlInput').value.trim();
+        const resultCard = document.getElementById('resultCard');
+        const loaderContainer = document.getElementById('loaderContainer');
+        const statusText = document.getElementById('statusText');
+        const flawText = document.getElementById('flawText');
+        const legalText = document.getElementById('legalText');
+
+        if (!urlInput) {
+            alert("Please enter a URL first!");
+            return;
+        }
+
+        globalTarget = urlInput;
+        resultCard.style.display = "none";
+        loaderContainer.style.display = "block";
+
+        try {
+            // Relies on direct connection loops back to our Render API backend endpoint
+            const response = await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: urlInput })
+            });
+
+            const data = await response.json();
+
+            loaderContainer.style.display = "none";
+            resultCard.style.display = "block";
+
+            globalStatus = data.status;
+            globalFlaw = data.flaw;
+            globalLegal = data.legal_exposure;
+
+            statusText.innerText = data.status;
+            flawText.innerText = data.flaw;
+            legalText.innerText = data.legal_exposure;
+
+            if (data.status.includes("🔴")) {
+                resultCard.style.borderLeftColor = "#da3633";
+                statusText.style.color = "#da3633";
+            } else if (data.status.includes("🟢")) {
+                resultCard.style.borderLeftColor = "#238636";
+                statusText.style.color = "#238636";
+            } else {
+                resultCard.style.borderLeftColor = "#d29922";
+                statusText.style.color = "#d29922";
+            }
+
+        } catch (error) {
+            loaderContainer.style.display = "none";
+            resultCard.style.display = "block";
+            statusText.innerText = "⚠️ SYSTEM ERROR";
+            statusText.style.color = "#da3633";
+            flawText.innerText = "Could not communicate with the cloud scanner engine instance.";
+            legalText.innerText = "Check active cluster deployment structures.";
+        }
+    }
+
+    function downloadReport() {
+        if (!globalTarget) return;
+        const logContent = `=========================================
+AEGISSCANNER SECURITY AUDIT LOG FILE
+=========================================
+Target Domain     : ${globalTarget}
+Execution State   : ${globalStatus}
+Exploit Summary   : ${globalFlaw}
+Legal Framework   : ${globalLegal}
+=========================================`;
+
+        const blob = new Blob([logContent], { type: "text/plain" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `Aegis_Report_${globalTarget.replace(/[^a-zA-Z0-9]/g, "_")}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+</body>
+</html>
