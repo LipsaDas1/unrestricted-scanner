@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AegisScanner Enterprise Portal</title>
-    <!-- Imports the client-side PDF compilation canvas engine -->
+    <!-- Client-side PDF Generation Engine Script Hook -->
     <script src="https://cloudflare.com"></script>
     <style>
         body {
@@ -14,7 +14,6 @@
             margin: 0; padding: 40px;
             position: relative; overflow-x: hidden;
         }
-        /* MATRIX DIGITAL RAIN CANVAS BACKGROUND */
         #matrixCanvas {
             position: fixed; top: 0; left: 0;
             width: 100vw; height: 100vh;
@@ -62,7 +61,6 @@
         }
         .report-btn:hover { background-color: #79c0ff; }
 
-        /* HIDDEN PDF TEMPLATE STYLING BLOCK */
         #pdfTemplate {
             display: none; background: white; color: #333;
             padding: 50px; font-family: Arial, sans-serif;
@@ -96,7 +94,6 @@
     </div>
 </div>
 
-<!-- COMPILER CAPTURE MATRIX BLOCK (CONVERTS INTO PDF DYNAMICALLY) -->
 <div id="pdfTemplate">
     <div class="pdf-header">
         <h1 style="color: #0056b3; margin: 0; font-size: 28px;">AEGISSCANNER SECURITY COMPLIANCE REPORT</h1>
@@ -131,11 +128,11 @@
 </div>
 
 <script>
-    // MATRIX RAIN ANIMATION ENGINE CODE LOGIC
+    // MATRIX RAIN ANIMATION PIPELINE
     const canvas = document.getElementById('matrixCanvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const alphabet = "01010101ABCDEFGHIJKLMNOPQRSTUVWXYZ⚔️🛡️☠️";
+    const alphabet = "01010101ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     const fontSize = 16; const columns = canvas.width / fontSize;
     const rainDrops = Array(Math.floor(columns)).fill(1);
 
@@ -152,7 +149,7 @@
     setInterval(drawMatrix, 30);
     window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
-    // API EXECUTOR PIPELINE
+    // UNRESTRICTED DAST SCANNER INTERFACE INTERACTION EXECUTOR
     let currentData = {};
     let targetDomainSnapshot = "";
 
@@ -194,15 +191,13 @@
             }
         } catch (error) {
             loaderContainer.style.display = "none";
-            alert("Connection error occurred.");
+            alert("Connection error occurred. Server offline or compiling script models.");
         }
     }
 
-    // THE CORPORATE PDF GENERATOR ENGINE HOOK
     function generateCorporatePDF() {
         if (!targetDomainSnapshot) return;
 
-        // Populate hidden printable clean white template view area elements
         document.getElementById('pdfTarget').innerText = targetDomainSnapshot;
         document.getElementById('pdfStatus').innerText = currentData.status;
         document.getElementById('pdfStatus').style.color = currentData.status.includes("🔴") ? "#da3633" : "#238636";
@@ -212,10 +207,21 @@
         document.getElementById('pdfDPDP').innerText = currentData.dpdp;
 
         const element = document.getElementById('pdfTemplate');
-        element.style.display = "block"; // Make visible temporarily for canvas screenshot assembly
+        element.style.display = "block"; 
 
         const options = {
             margin: 0.5,
-            filename: `Aegis_Compliance_Report_${targetDomainSnapshot.replace(/[^a-zA-Z0-9]/g, "_")}.pdf`,
+            filename: `Aegis_Compliance_Report.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
-            html2canvas: { scale: 2, logging: false },jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }};html2pdf().set(options).from(element).save().then(() => {element.style.display = "none"; // Hide away back out of context smoothly});}
+            html2canvas: { scale: 2, logging: false },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(options).from(element).save().then(() => {
+            element.style.display = "none"; 
+        });
+    }
+</script>
+
+</body>
+</html>
